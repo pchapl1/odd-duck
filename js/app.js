@@ -40,9 +40,84 @@ let wineGlass = new Product('wine-glass')
 
 const images = [bag, banana, bathroom, boots, breakfast, bubblegum, chair, cthulhu, dogDuck, dragon, pen, petSweep, scissors, shark, sweep, tauntaun, unicorn, waterCan, wineGlass];
 
+function getChartLabels(arr) {
+    let labels = []
+    arr.forEach((ele)=> {
+        labels.push(ele.name)
+    })
+    return labels
+}
+
+function getProductLikes(arr) {
+    let likes = []
+    arr.forEach(ele=> {
+        likes.push(ele.clicked)
+    })
+    return likes
+}
+
+function getProductViews(arr) {
+    let views = []
+    arr.forEach(ele=> {
+        views.push(ele.shownCount)
+    })
+    return views
+}
+
+function createChart(){
+    //remove the photos to replace later with chart
+    // clearPhotos()
+
+    let div = document.createElement('div')
+
+    let instructionDiv = document.querySelector('#instructions')
+    //remove header from instruction div
+    document.querySelector('#instruction-header').remove()
+    div.classList.add('resultsChart')
+
+    let paragraphDiv = document.querySelector('#paragraph')
+
+    instructionDiv.appendChild(div)
+
+    let productLabels = getChartLabels(images)
+
+    let productLikes = getProductLikes(images)
+
+    let productViews = []
+
+    // create chart
+    let ctx = document.createElement('canvas')
+
+    div.appendChild(ctx)
+
+    new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: productLabels,
+        datasets: [{
+        label: '# of Votes',
+        data: productLikes,
+        borderWidth: 1
+        },
+        {
+            label: '# of times shown',
+            data: productLikes,
+            borderWidth: 1
+        }
+    ],
+    },
+    options: {
+        scales: {
+        y: {
+            beginAtZero: true
+        }
+        }
+    }
+    });
+
+}
 
 function handleShowResults(event) {
-
 
     let ul = document.createElement('ul')
 
@@ -59,6 +134,11 @@ function handleShowResults(event) {
         ul.appendChild(li)
 
     })
+
+    createChart()
+
+    let button = document.querySelector('button')
+    button.remove()
 }
 
 function addShowResultsButton(){
@@ -77,6 +157,7 @@ function addShowResultsButton(){
 }
 
 function handleClick(event){
+    event.preventDefault()
 
     for (let i = 0; i < images.length; i++) {
         if (images[i].name === event.target.alt && numRounds > 0) {
@@ -95,7 +176,6 @@ function handleClick(event){
 
 }
 
-
 function removeEventListeners(){
 
     imgs = document.querySelectorAll('img')
@@ -106,7 +186,6 @@ function removeEventListeners(){
     }
 
 }
-
 
 function clearPhotos(){
 
@@ -122,9 +201,6 @@ function clearPhotos(){
 const displayPhotos = (arr) => {
 
     arr.forEach((ele, idx) => {
-        // get the intended div using the index of the loop
-        // let div = document.getElementById(String(idx))
-
 
         let div = document.createElement('div')
 
@@ -141,6 +217,7 @@ const displayPhotos = (arr) => {
         // set the id of the image to the ele.name
         img.alt = ele.name
 
+
         // append the image
         div.append(img)
 
@@ -156,24 +233,32 @@ const displayPhotos = (arr) => {
 
 
 // create an algorithm that will randomly generate three unique product images from the images directory
+let recentlyUsed = [];
+
 const getImages = (imageArr)=> {
     let photos = []
 
     imageArr = [...images]
 
-    for (let i = 0; i < 3; i++) {
+    while ( photos.length < 3 && recentlyUsed.length < 6 ) {
+
         let randomNum = Math.floor(Math.random() * imageArr.length);
-        photos.push(imageArr.splice(randomNum, 1)[0]);
-      }
 
-      displayPhotos(photos)
+        if (!recentlyUsed.includes(randomNum)) {
 
-      return photos
+            recentlyUsed.push(randomNum)
+
+            photos.push(images[randomNum])
+        }
+    }
+    // set the list to the last 3 indexes
+    recentlyUsed = recentlyUsed.slice(-3)
+   
+
+    displayPhotos(photos)
+
+    return photos
 }
 
-
 getImages(images)
-
-
-// use lighthouse and go for a score of 80 or higher
 
