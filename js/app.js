@@ -1,6 +1,6 @@
 const SIDEBAR = document.querySelector('#sidebar')
 const container = document.querySelector('#container')
-let numRounds = 10;
+let numRounds = 25;
 
 
 // constructor for creating a product
@@ -240,31 +240,20 @@ const getImages = (imageArr)=> {
 
     imageArr = [...images]
 
-
-    while (testArr.length < 3) {
+    while ( photos.length < 3 && recentlyUsed.length < 6 ) {
 
         let randomNum = Math.floor(Math.random() * imageArr.length);
 
-        if (!testArr.includes(randomNum)) {
-            testArr.push(randomNum)
-            photos.push(images[randomNum])
+        if (!recentlyUsed.includes(randomNum)) {
 
+            recentlyUsed.push(randomNum)
+
+            photos.push(images[randomNum])
         }
     }
-    // console.log(testArr)
-    // console.log(photos)
-
-    // for (let i = 0; i < 3; i++) {
-
-    //     let randomNum = Math.floor(Math.random() * imageArr.length);
-
-    //     if (!testArr.includes(randomNum)) {
-    //         testArr.push(randomNum)
-    //     }
-    //     photos.push(imageArr.splice(randomNum, 1)[0]);
-    // }
-
-    // console.log(photos)
+    // set the list to the last 3 indexes
+    recentlyUsed = recentlyUsed.slice(-3)
+   
 
     displayPhotos(photos)
 
