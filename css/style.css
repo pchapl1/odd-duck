@@ -66,11 +66,13 @@ div img {
     border: 2px solid white;
     border-radius: 8px;
     color: white;
-    overflow: scroll;
+    /* max-height: 100%; */
 }
 
 #sidebar ul {
     padding: 1rem;
+    overflow: scroll;
+    height: 85vh;
 }
 
 #sidebar ul li {
@@ -120,4 +122,15 @@ footer {
 .image-size-div {
     height: 300px;
     background-color: white;
+}
+
+
+.resultsChart {
+    border: 3px solid white;
+    border-radius: 6px;
+    grid-row-start: 1;
+    grid-row-end: 3;
+    grid-column-start: 2;
+    grid-column-end: 5;
+
 }
