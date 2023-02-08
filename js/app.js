@@ -1,6 +1,7 @@
 const SIDEBAR = document.querySelector('#sidebar')
 const container = document.querySelector('#container')
 let numRounds = 25;
+let resetNumRounds = 25;
 
 
 // constructor for creating a product
@@ -40,6 +41,21 @@ let wineGlass = new Product('wine-glass')
 
 const images = [bag, banana, bathroom, boots, breakfast, bubblegum, chair, cthulhu, dogDuck, dragon, pen, petSweep, scissors, shark, sweep, tauntaun, unicorn, waterCan, wineGlass];
 
+function pageLoad() {
+
+}
+
+
+function resetPage(){
+
+    // reset numRounds
+    numRounds = resetNumRounds
+
+
+    let getLocalStorage = localStorage.getItem('persistedData')
+}
+
+
 function getChartLabels(arr) {
     let labels = []
     arr.forEach((ele)=> {
@@ -65,8 +81,6 @@ function getProductViews(arr) {
 }
 
 function createChart(){
-    //remove the photos to replace later with chart
-    // clearPhotos()
 
     let div = document.createElement('div')
 
@@ -154,6 +168,10 @@ function addShowResultsButton(){
 
     button.addEventListener('click', handleShowResults)
 
+}
+
+function persistData(image) {
+    
 }
 
 function handleClick(event){
