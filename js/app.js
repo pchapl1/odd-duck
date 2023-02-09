@@ -1,7 +1,37 @@
 const SIDEBAR = document.querySelector('#sidebar')
 const container = document.querySelector('#container')
-let numRounds = 25;
+let numRounds = 10;
 let resetNumRounds = 25;
+let recentlyUsed = [];
+
+
+
+pageLoad()
+
+let images = getProducts()
+// get images from local storage
+
+function getProducts(){
+    let products = localStorage.getItem('products')
+    console.log(products)
+    if (products) {
+
+        let parsedData = JSON.parse(products)
+
+        parsedData.forEach(product=>{
+            let prod = new Product(
+                product.name,
+                product.filePath,
+                product.shownCount,
+                product.clicked
+            )
+            product = prod
+        })
+
+        return parsedData
+    }
+    return false
+}
 
 
 // constructor for creating a product
@@ -15,33 +45,6 @@ function Product(name, fileExtension = 'jpg') {
     this.displayInfo = function() {
         return `${this.name} had ${this.clicked} votes, and was shown ${this.shownCount} times.`
     }
-
-}
-
-let bag = new Product('bag')
-let banana = new Product('banana')
-let bathroom = new Product('bathroom')
-let boots = new Product('boots')
-let breakfast = new Product('breakfast')
-let bubblegum = new Product('bubblegum')
-let chair = new Product('chair')
-let cthulhu = new Product('cthulhu')
-let dogDuck = new Product('dog-duck')
-let dragon = new Product('dragon')
-let pen = new Product('pen')
-let petSweep = new Product('pet-sweep')
-let scissors = new Product('scissors')
-let shark = new Product('shark')
-let sweep = new Product('sweep', 'png')
-let tauntaun = new Product('tauntaun')
-let unicorn = new Product('unicorn')
-let waterCan = new Product('water-can')
-let wineGlass = new Product('wine-glass')
- 
-
-const images = [bag, banana, bathroom, boots, breakfast, bubblegum, chair, cthulhu, dogDuck, dragon, pen, petSweep, scissors, shark, sweep, tauntaun, unicorn, waterCan, wineGlass];
-
-function pageLoad() {
 
 }
 
@@ -131,19 +134,31 @@ function createChart(){
 
 }
 
+function rebaseProduct(product){
+    let prod = new Product(
+        product.name,
+        product.filePath,
+        product.shownCount,
+        product.clicked
+    )
+    console.log(prod)
+    return prod
+}
+
 function handleShowResults(event) {
 
+    console.log('handle show results: ', images)
     let ul = document.createElement('ul')
 
     sidebar.appendChild(ul)
 
     images.forEach((image) => {
 
-        image.displayInfo()
+        // image.displayInfo()
 
         let li = document.createElement('li')
 
-        li.textContent = image.displayInfo()
+        // li.textContent = image.displayInfo()
 
         ul.appendChild(li)
 
@@ -170,18 +185,21 @@ function addShowResultsButton(){
 
 }
 
-function persistData(image) {
-    
-}
+
 
 function handleClick(event){
     event.preventDefault()
+
+    console.log('handle click: ', images)
 
     for (let i = 0; i < images.length; i++) {
         if (images[i].name === event.target.alt && numRounds > 0) {
             images[i].clicked ++
             clearPhotos()
-            getImages()
+            getImages(images)
+            let stringifiedData = JSON.stringify(images)
+            localStorage.setItem('products', stringifiedData)
+
         }
     }
     if (numRounds === 0) {
@@ -190,7 +208,6 @@ function handleClick(event){
     }
 
     numRounds -= 1
-
 
 }
 
@@ -216,7 +233,7 @@ function clearPhotos(){
 }
 
 //display them side by side in the browser
-const displayPhotos = (arr) => {
+function displayPhotos(arr){
 
     arr.forEach((ele, idx) => {
 
@@ -251,12 +268,12 @@ const displayPhotos = (arr) => {
 
 
 // create an algorithm that will randomly generate three unique product images from the images directory
-let recentlyUsed = [];
 
-const getImages = (imageArr)=> {
+function getImages(imageArr) {
     let photos = []
 
-    imageArr = [...images]
+
+    // imageArr = [...images]
 
     while ( photos.length < 3 && recentlyUsed.length < 6 ) {
 
@@ -266,7 +283,7 @@ const getImages = (imageArr)=> {
 
             recentlyUsed.push(randomNum)
 
-            photos.push(images[randomNum])
+            photos.push(imageArr[randomNum])
         }
     }
     // set the list to the last 3 indexes
@@ -278,5 +295,53 @@ const getImages = (imageArr)=> {
     return photos
 }
 
-getImages(images)
+// let images = getProducts()
+
+function pageLoad(){
+
+    let images = getProducts()
+
+    if (images) {
+        getImages(images)
+    }
+
+    if (!images) {
+        let bag = new Product('bag')
+        let banana = new Product('banana')
+        let bathroom = new Product('bathroom')
+        let boots = new Product('boots')
+        let breakfast = new Product('breakfast')
+        let bubblegum = new Product('bubblegum')
+        let chair = new Product('chair')
+        let cthulhu = new Product('cthulhu')
+        let dogDuck = new Product('dog-duck')
+        let dragon = new Product('dragon')
+        let pen = new Product('pen')
+        let petSweep = new Product('pet-sweep')
+        let scissors = new Product('scissors')
+        let shark = new Product('shark')
+        let sweep = new Product('sweep', 'png')
+        let tauntaun = new Product('tauntaun')
+        let unicorn = new Product('unicorn')
+        let waterCan = new Product('water-can')
+        let wineGlass = new Product('wine-glass')
+         
+        
+        const images = [bag, banana, bathroom, boots, breakfast, bubblegum, chair, cthulhu, dogDuck, dragon, pen, petSweep, scissors, shark, sweep, tauntaun, unicorn, waterCan, wineGlass];
+        let stringifiedData = JSON.stringify(images)
+
+        localStorage.setItem('products', stringifiedData)
+
+        getImages(images)
+
+        return images
+    }
+
+
+}
+
+
+
+
+
 
