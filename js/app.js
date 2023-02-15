@@ -1,6 +1,6 @@
 const SIDEBAR = document.querySelector('#sidebar')
 const container = document.querySelector('#container')
-let numRounds = 10;
+let numRounds = 25;
 let resetNumRounds = 25;
 let recentlyUsed = [];
 
